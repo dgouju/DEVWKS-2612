@@ -161,6 +161,7 @@ Did you get it? Notice the value between [ ]. You can continue if you want:
 ### Accessing datalake
 
 1. Open the User App named "Datalake queries"
+ ![App Options](images/screenshot_2780.png)
 2. On the right side, unroll App Options using the blue chevron and look at usage example:  
  ![App Options](images/screenshot_2684.png)  
 To avoid managing a lot of Spark configuration, Tetration UserApps offers you some functions managing that for you.  
@@ -318,21 +319,18 @@ Your proctor sent a list of non-compliant IPs. Your mission will be to list IPs 
 
 1. Exit your previous UserApp by clicking on Data Platform --> User Apps in the left panel.
 2. Stop your previous App "Kafka contest".
-3. Click on **Import App**, navigate to Documents --> DEVWKS-2612 and select **h4_pyspark.Combine data.ipynb**
+3. Open the User App named "Combine data"
  ![App Options](images/screenshot_2722.png)
 4. **Run the first cell** to initialize Spark SQL interface using your SparkContext.
 5. We will now look at the latest non-compliant IPs. Tetration store its data per hour in the Datalake. So idea is to look for the latest data. **Add a new cell**.
 6. Unroll App Options, Usage Example, look for **List** API and stay on option 1 of 3. This will list all hourly datasets available in the datalake.
 7. Click on **InputPath**, then navigate to App --> datasink --> DEVWKS-2612 and then on **Dismiss** (**DO NOT CLICK ON A DATE**).
-8. Click on **Copy API call**. This API call will return a list. Store last list entry in a variable called **ts** and display it. Tip: `[` is `alt+shift+(`on a Mac.
+8. Click on **Copy API call**. This API call will return a list. Store last list entry in a variable called **ts** and display it:
 
- <details>
- <summary>Answer code</summary>
- <pre>
+ ```python
 ts = sc._jvm.com.tetration.apps.IO.list(sqlContext._ssql_ctx, "/appdata/datasink/DEVWKS-2612")[-1]
 print(ts)
- </pre>
- </details>
+```
 
 9. **Run this cell**. **Add a new one**.
 10. Now we will create a Spark SQL Table on top of it and select IP list from this table. **In the new empty cell**:  
@@ -382,16 +380,13 @@ print(message)
 15. **Run this cell**.
 16. Now, send this message to Kafka Alerts topic. **Add a new cell** and put the proper code in it.
 
- <details>
- <summary>Answer code</summary>
- <pre>
+ ```python
 status = sc._jvm.com.tetration.apps.DataTaps.sendMessage(message, "Alerts")
 if status == 1:
-&nbsp;&nbsp;&nbsp;&nbsp;print("Message sent")
+	 print("Message sent")
 else:
-&nbsp;&nbsp;&nbsp;&nbsp;print("Error!")
- </pre>
- </details>
+	 print("Error!")
+```
 
 17. **Run this cell** and look at your proctor's screen.
  

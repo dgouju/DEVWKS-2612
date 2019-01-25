@@ -114,7 +114,7 @@ This first lab will make you do some basic operation to perceive Jupyter noteboo
 
 1. Using left navigation pane in Tetration UI, go to Data Platform --> User Apps.  
  ![Jupyter toolbar](images/toolbar.png)  
- This is your UserApps repository, and examples are provided for your reference:
+ This is your UserApps repository, with lab apps and examples provided for your reference:
  ![Jupyter toolbar](images/screenshot_2727.png) 
 2. Create a New App in PySpark that you can name "Jupyter basics"
 3. You will enter in your newly created UserApp. Let's have a look at the toolbar and menus:  
@@ -160,38 +160,22 @@ Did you get it? Notice the value between [ ]. You can continue if you want:
 ## Query the datalake
 ### Accessing datalake
 
-1. Create a New App in PySpark that you can name "Datalake queries"
-2. In the **first cell**, copy-past this HTML code:  
-
- ```html
-<img src="https://ibin.co/3hXAuMuHhEeK.png" alt="Cisco Systems" width="200" height="600"
-style="float:left;width:372px;height:118px;">
-```
- And change the cell type from **Code** to **Markdown**. Run it.  
- Nice, isn't it?  
- You can add also markdown script to make your notebooks nicer:  
-
- ```markdown
-# This is my first UserApp
-It is **cool**!
-```
-
-3. **Add a new cell** for some code
-4. On the right side, unroll App Options using the blue chevron and look at usage example:  
+1. Open the User App named "Datalake queries"
+2. On the right side, unroll App Options using the blue chevron and look at usage example:  
  ![App Options](images/screenshot_2684.png)  
 To avoid managing a lot of Spark configuration, Tetration UserApps offers you some functions managing that for you.  
-5. Click on Read to read data from the Datalake.
-6. There are multiple lists of parameters you can use to query the datalake. Browse them, and stop on option 4 of 6:  
+3. Click on Read to read data from the Datalake.
+4. There are multiple lists of parameters you can use to query the datalake. Browse them, and stop on option 4 of 6:  
  ![App Options](images/screenshot_2687.png)  
-7. Click on **InputPath** and navigate to Tetration --> Flows (**DO NOT CLICK ON A DATE**). Then click on **Dismiss** (on the very bottom).
-8. Click on **Copy headers** and paste in the **last empty cell**. This code gives you access to Spark (Spark Context) in SparkSQL. Your cell should now look like this:
+5. Click on **InputPath** and navigate to Tetration --> Flows (**DO NOT CLICK ON A DATE**). Then click on **Dismiss** (on the very bottom).
+6. Click on **Copy headers** and paste in the **last empty cell**. This code gives you access to Spark (Spark Context) in SparkSQL. Your cell should now look like this:
 
  ```python
 from pyspark.sql import SQLContext
 sqlContext = SQLContext(sc)
 ```
 
-9. Click on **Copy API call** and past **in the same cell**. Hide the App Option panel with the chevrons. This code returns the Spark main object called RDD (Resilient Distributed Dataset). Add ```.registerTempTable("my_flows")``` in the end so your cell should now look like:  
+7. Click on **Copy API call** and past **in the same cell**. Hide the App Option panel with the chevrons. This code returns the Spark main object called RDD (Resilient Distributed Dataset). Add ```.registerTempTable("my_flows")``` in the end so your cell should now look like:  
 
  ```python
 from pyspark.sql import SQLContext
@@ -201,8 +185,8 @@ sc._jvm.com.tetration.apps.IO.read(sqlContext._ssql_ctx, "/tetration/flows", "PA
 
  This tells Spark to create a "SQL Table" (like an Excel sheet) called "my_flows" that we will manipulate in Spark SQL.
 
-10. **Run this cell**, that contains all the structures we will then manipulate multiple times. No output is expected.
-11. **Add a new cell**, put this code and run it:
+8. **Run this cell**, that contains all the structures we will then manipulate multiple times. No output is expected.
+9. **Add a new cell**, put this code and run it:
 
  ```python
 my_query = sqlContext.sql("SELECT * FROM my_flows LIMIT 2")
@@ -210,7 +194,7 @@ my_query = sqlContext.sql("SELECT * FROM my_flows LIMIT 2")
 
  Super fast isn't it? But Spark is lazy! It did nothing :-)
  
-12. Replace with this **in the same cell** and re-run the cell:  
+10. Replace with this **in the same cell** and re-run the cell:  
 
  ```python
 my_query = sqlContext.sql("SELECT * FROM my_flows LIMIT 2")
@@ -220,7 +204,7 @@ result
 
  Slower isn't it? Spark had to work and get the data as it asked the results in a Pandas object (Pandas Dataframe). Pandas is a data analysis library.
  
-13. **Add a new cell** (as we got data and don't want to recollect it), and run this code in it:  
+11. **Add a new cell** (as we got data and don't want to recollect it), and run this code in it:  
 
  ```python
 list(result)
@@ -234,29 +218,18 @@ Let's code a portscan detector. First, we have to specify how this can be define
 * Let's start with TCP (not UDP) port scan, as it can be easily extended.
 * We will work on source IP / destination IP / destination port tuples of failed connections.
 * A failed connection is 1 SYN Source --> Destination packet and 0 or 1 RST Destination --> Source packet.
-* There should be at least X such tuples (few are fine, it may happen).
+* There should be at least X such tuples (few are fine, it may happen), we will use 10.
 
 This can be enhanced (looking at destination port list, ...) but let's start this way.  
 
 1. Exit your previous UserApp by clicking on Data Platform --> User Apps in the left panel.
 2. Stop your previous App "Datalake queries".
-3. Click on Import App, navigate to Documents --> DEVWKS-2612 and select **h4_pyspark.Portscan detector.ipynb**
-4. There is a header to describe the UserApp. In the first code cell, the main imports are already done and Spark SQL table "flows" is created:
+3. Open the User App named "Portscan detector"
+4. There is a header to describe the UserApp. In the first code cell, the main imports are already done, Spark SQL table "flows" is created and threshold value for failed connections count is set:
   ![App Options](images/screenshot_2717.png)
-5. **In the cell already containing code**, add a variable called **threshold** with value **10**, at the end of the code cell to define the minimum of failed connection tuples.  
 
- <details>
- <summary>Answer code</summary>
- <pre>
-from pyspark.sql import SQLContext
-sqlContext = SQLContext(sc)
-sc._jvm.com.tetration.apps.IO.read(sqlContext._ssql_ctx, "/tetration/flows", "PARQUET", "LASTHOUR").registerTempTable("flows")
-threshold = 10
- </pre>
- </details>
-
-6. **Run this cell**, and **add a new cell**. We will build the correct code step by step, looking at intermediary results.
-7. First, we will look for all candidates observations. This is our main data. As we will use it multiple times, we will ask Spark to cache it. Otherwise, Spark will rebuild the complete query each time and start be looking at all data in HDFS... **Put this code in the empty cell and run it**:
+5. **Run this cell**, and **add a new cell**. We will build the correct code step by step, looking at intermediary results.
+6. First, we will look for all candidates observations. This is our main data. As we will use it multiple times, we will ask Spark to cache it. Otherwise, Spark will rebuild the complete query each time and start be looking at all data in HDFS... **Put this code in the empty cell and run it**:
 
  ```python
 # Searching for all refused connections observations
@@ -267,7 +240,7 @@ spark_port_scan_observations.toPandas()
 
  Only last line requires Spark to execute the query (returning a Pandas Dataframe).
 
-8. Now, we need to remove (potential) duplicate entries (ex: client trying to access multiple time to the same closed / firewalled service). **Add a new cell** and paste this code and run it:
+7. Now, we need to remove (potential) duplicate entries (ex: client trying to access multiple time to the same closed / firewalled service). **Add a new cell** and paste this code and run it:
 
  ```python
 # Removing duplicates (server trying multiple times to connect to a single port isn't a scan)
@@ -277,7 +250,7 @@ spark_port_scan_observations_cleaned.toPandas()
 
  You noticed that `.toPandas()` is always in the end: returning data centrally is the last step, we want Spark to do all the other operations in a distributed way.
 
-9. Then, we need to count all occurrences of same timestamp, source, destination tuple. **In the same cell**, replace the all code by this one and run it:
+8. Then, we need to count all occurrences of same timestamp, source, destination tuple. **In the same cell**, replace the all code by this one and run it:
 
  ```python
 # Removing duplicates (server trying multiple times to connect to a single port isn't a scan)
@@ -289,7 +262,7 @@ spark_scan_tuples_count = spark_scan_tuples.count()
 spark_scan_tuples_count.toPandas()
 ```
 
-10. Lastly, we only keep entries if count is above threshold. **In the same cell**, replace all the code by this one and run it:
+9. Lastly, we only keep entries if count is above threshold. **In the same cell**, replace all the code by this one and run it:
 
  ```python
 # Removing duplicates (server trying multiple times to connect to a single port isn't a scan)
@@ -316,16 +289,13 @@ This a contest :-)! Kafka topic will be monitored on your proctor's screen, the 
 
 1. Exit your previous UserApp by clicking on Data Platform --> User Apps in the left panel.
 2. Stop your previous App "Portscan detector".
-3. Click on **Import App**, navigate to Documents --> DEVWKS-2612 and select **h4_pyspark.Kafka contest.ipynb**
+3. Open the User App named "Kafka contest"
   ![App Options](images/screenshot_2719.png)
 4. **In the empty cell**, create a variable called **message** and store in it a **personalized message** to identify you as the winner.  
 
- <details>
- <summary>Answer code</summary>
- <pre>
+ ```python
 message = "And the winner is XXXXX!"
- </pre>
- </details>
+```
 
 5. Unroll App Options, Usage Example, look for **Datataps** API.
 6. In the Usage Example, click on **DefaultDataTap**, select **Alerts**, then click on **Dismiss**. Alerts is automatically mapped to the proper Kafka topic (this is a unique identifier per tenant).

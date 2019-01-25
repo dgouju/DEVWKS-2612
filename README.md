@@ -109,7 +109,7 @@ Preparing the Workstation to Run this lab
 3. Log into Tetration using the password provided on the Tetration credentials tab.
 4. You are now logged into Tetration with Developer role.
 
-## Get familiar with Jupyter notebooks
+## Step 1: Get familiar with Jupyter notebooks
 This first lab will make you do some basic operation to perceive Jupyter notebooks approach.  
 
 1. Using left navigation pane in Tetration UI, go to Data Platform --> User Apps.  
@@ -157,7 +157,7 @@ Did you get it? Notice the value between [ ]. You can continue if you want:
  As you did a Checkpoint and your app is still running, you could go back into it. All states are saved, and you could continue incrementing the value between [ ].  
  Let's save some resources, so stop your application. Checkpoint will be deleted.
 
-## Query the datalake
+## Step 2: Query the datalake
 ### Accessing datalake
 
 1. Open the User App named "Datalake queries"
@@ -191,21 +191,13 @@ sc._jvm.com.tetration.apps.IO.read(sqlContext._ssql_ctx, "/tetration/flows", "PA
 
  ```python
 my_query = sqlContext.sql("SELECT * FROM my_flows LIMIT 2")
-```
-
- Super fast isn't it? But Spark is lazy! It did nothing :-)
- 
-10. Replace with this **in the same cell** and re-run the cell:  
-
- ```python
-my_query = sqlContext.sql("SELECT * FROM my_flows LIMIT 2")
 result = my_query.toPandas()
 result
 ```  
 
- Slower isn't it? Spark had to work and get the data as it asked the results in a Pandas object (Pandas Dataframe). Pandas is a data analysis library.
+ Spark collected the results and returned a Pandas object (Pandas Dataframe). Pandas is a data analysis library.
  
-11. **Add a new cell** (as we got data and don't want to recollect it), and run this code in it:  
+10. **Add a new cell** (as we got data and don't want to recollect it), and run this code in it:  
 
  ```python
 list(result)
@@ -217,9 +209,9 @@ list(result)
 Let's code a portscan detector. First, we have to specify how this can be defined. We will use the following assumptions:
 
 * Let's start with TCP (not UDP) port scan, as it can be easily extended.
-* We will work on source IP / destination IP / destination port tuples of failed connections.
 * A failed connection is 1 SYN Source --> Destination packet and 0 or 1 RST Destination --> Source packet.
-* There should be at least X such tuples (few are fine, it may happen), we will use 10.
+* We will work on source IP / destination IP / destination port tuples of failed connections.
+* There should be at least X such tuples of failed connections, we will use 10 as threshold value.
 
 This can be enhanced (looking at destination port list, ...) but let's start this way.  
 
@@ -285,7 +277,7 @@ pandas_result
 
  **You did it!**
 
-## Send a message to Kafka
+## Step 3: Send a message to Kafka
 This a contest :-)! Kafka topic will be monitored on your proctor's screen, the messages you will post will display in order of arrival.
 
 1. Exit your previous UserApp by clicking on Data Platform --> User Apps in the left panel.
@@ -313,7 +305,7 @@ else:
 
 9. **Run it** and look at your proctor's screen! Who will be first?
 
-## Combine external data with Tetration Datalake
+## Step 4: Combine external data with Tetration Datalake
 Let's assume you have a compliance system that is able to send messages around systems that are identified as not compliant. Tetration can get this information, store it and combine it with its data.  
 Your proctor sent a list of non-compliant IPs. Your mission will be to list IPs that have been accessed by these non-compliant systems.
 

@@ -8,61 +8,6 @@ For people unfamiliar with Apple Mac, some tricks:
 * Copy / Past: "cmd+c" / "cmd+v" (not ctrl!)
 * Select all: "cmd+a"
 
-## Lab Environment Setup
-**All these steps were already executed by your proctor in preparation of the lab. There are for reference only, jump to next section.**  
-
-1. Execute `setup.sh` from proctor USB key. It will:
- * Suspend VirtualBox VMs
- * Kill browsers (Safari, Firefox, Chrome)
- * Stop AnyConnect
- * Clone GitHub repository
- * Generate AnyConnect connection file
- * Generate credential page
- * Display if Vagrant environments are still running
-
- <details>
- <summary>Sample Setup Output</summary>
- <pre>
-Setting up the workstation environment for the lab.
-
- Suspending any running VirtualBox VMs
-
- Killing browsers
- 
- Stopping AnyConnect
- 
- Cloning DEVWKS-2612 github repo
- Cloning into 'DEVWKS-2612'...
- remote: Enumerating objects: 24, done.
- remote: Counting objects: 100% (24/24), done.
- remote: Compressing objects: 100% (19/19), done.
- remote: Total 24 (delta 4), reused 24 (delta 4), pack-reused 0
- Unpacking objects: 100% (24/24), done.
- 
- Generating AnyConnect configuration file
- Enter pod id (1-9):
- 2
- 
- Please confirm there are no running Vagrant environments.
- If there are, please vagrant suspend them before continuing.
- id       name    provider           state              directory
- 4174bb6  web     virtualbox         stopped            c:/hashicorp/foo
- 72a2e4d  default vmware\_workstation running            c:/hashicorp/bar
- 865a979  default virtualbox         suspended          c:/hashicorp/baz
- 
- /Users/dgouju/Documents/DEVWKS-2612 content:
-LICENSE					h4_pyspark.Combine data.ipynb		pod.html				username
-README.md				h4_pyspark.Kafka contest.ipynb		restart.sh				vars.sh
-anyconnect.txt				h4_pyspark.Portscan detector.ipynb	start.sh
-cleanup.sh
-
- Setup completed. To begin the lab run:
- 
- cd Documents/DEVWKS-2612/
- ./start.sh
- </pre>
- </details>
-
 ## Connect to the lab environment
 **This is where you start!**
 
@@ -203,7 +148,7 @@ result
 list(result)
 ```  
 
- You have now the list of the fields available in the flows datalake you can use!
+ You have now the list of the fields available in the flows Datalake you can use!
 
 ### Use case
 Let's code a portscan detector. First, we have to specify how this can be defined. We will use the following assumptions:
@@ -284,18 +229,15 @@ This a contest :-)! Kafka topic will be monitored on your proctor's screen, the 
 2. Stop your previous App "Portscan detector".
 3. Open the User App named "Kafka contest"
   ![App Options](images/screenshot_2719.png)
-4. **In the empty cell**, create a variable called **message** and store in it a **personalized message** to identify you as the winner.  
+4. **In the empty cell**, create a variable called **message** and store in it a **personalized message** to identify you as the winner and run it.  
 
  ```python
 message = "And the winner is XXXXX!"
 ```
 
-5. Unroll App Options, Usage Example, look for **Datataps** API.
-6. In the Usage Example, click on **DefaultDataTap**, select **Alerts**, then click on **Dismiss**. Alerts is automatically mapped to the proper Kafka topic (this is a unique identifier per tenant).
-7. **Copy API call**, past it **in the same cell** and store result in a variable called **status**. Test status value: 1 is ok, 0 is ko
+5. In the next cell, put this code. It uses the API Tetration gives yo access Kafka and send a message out, and tests its return code: 
 
  ```python
-message = "And the winner is XXXXX!"
 status = sc._jvm.com.tetration.apps.DataTaps.sendMessage(message, "Alerts")
 if status == 1:
 	 print("Message sent")
@@ -303,7 +245,7 @@ else:
 	 print("Error!")
 ```
 
-9. **Run it** and look at your proctor's screen! Who will be first?
+6. **Run it** and look at your proctor's screen! Who will be first?
 
 ## Step 4: Combine external data with Tetration Datalake
 Let's assume you have a compliance system that is able to send messages around systems that are identified as not compliant. Tetration can get this information, store it and combine it with its data.  
@@ -315,17 +257,15 @@ Your proctor sent a list of non-compliant IPs. Your mission will be to list IPs 
  ![App Options](images/screenshot_2722.png)
 4. **Run the first cell** to initialize Spark SQL interface using your SparkContext.
 5. We will now look at the latest non-compliant IPs. Tetration store its data per hour in the Datalake. So idea is to look for the latest data. **Add a new cell**.
-6. Unroll App Options, Usage Example, look for **List** API and stay on option 1 of 3. This will list all hourly datasets available in the datalake.
-7. Click on **InputPath**, then navigate to App --> datasink --> DEVWKS-2612 and then on **Dismiss** (**DO NOT CLICK ON A DATE**).
-8. Click on **Copy API call**. This API call will return a list. Store last list entry in a variable called **ts** and display it:
+6. In the next cell, put this code. It uses the Tetration API to get the list of hourly data sets in the Datalake coming from external systems. It takes the latest entry and displays it:
 
  ```python
 ts = sc._jvm.com.tetration.apps.IO.list(sqlContext._ssql_ctx, "/appdata/datasink/DEVWKS-2612")[-1]
 print(ts)
 ```
 
-9. **Run this cell**. **Add a new one**.
-10. Now we will create a Spark SQL Table on top of it and select IP list from this table. **In the new empty cell**:  
+7. **Run this cell**. **Add a new one**.
+8. Now we will create a Spark SQL Table on top of it and select IP list from this table. **In the new empty cell**:  
 
  ```python
 # Create a Spark SQL table called "notcompliant" on top of latest received data (JSON)
@@ -336,8 +276,8 @@ notcompliant_ips
 ```
  Note that data format isn't PARQUET (as for Tetration Datalake) but JSON, as it is the format of the data sent by the compliance system.
  
-11. **Run this cell**, you will get the data sent by the compliance system.
-12. Now, we want to get suspect communications, i.e. the list of source / destination IP, destination port, protocol where source is in this list of non compliant IP. **Add a new cell** and **add in it**:
+9. **Run this cell**, you will get the data sent by the compliance system.
+10. Now, we want to get suspect communications, i.e. the list of source / destination IP, destination port, protocol where source is in this list of non compliant IP. **Add a new cell** and **add in it**:
 
  ```python
 # Create a table called "flows" with last hour data
@@ -353,34 +293,7 @@ pandas_result = spark_suspicious_tuples.toPandas()
 pandas_result
 ```
 
-13. **Run this cell**.
-14. As we know how to send a message to Kafka, let's format this output and build a JSON object with some metadata around. **Add a new cell** and past this code:
-
- ```python
-# Create JSON dictionnary
-json_object = {}
-# Add key / values pairs
-json_object['message_type'] = "alert"
-json_object['message_desc'] = "suspicious_flows"
-json_object['message_timestamp'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')+" UTC"
-json_object['suspicious_flows'] = pandas_result.to_json(orient='records')
-# Format it as a string
-message = json.dumps(json_object)
-print(message)
-```
-
-15. **Run this cell**.
-16. Now, send this message to Kafka Alerts topic. **Add a new cell** and put the proper code in it.
-
- ```python
-status = sc._jvm.com.tetration.apps.DataTaps.sendMessage(message, "Alerts")
-if status == 1:
-	 print("Message sent")
-else:
-	 print("Error!")
-```
-
-17. **Run this cell** and look at your proctor's screen.
+11. **Run this cell**.
  
  This UserApp can be scheduled as a job for ongoing analysis and result can be processed by a SIEM consuming Kafka messages, ...
  

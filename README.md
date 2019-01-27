@@ -6,7 +6,7 @@ Tetration allows you to use its open Big Data engine to solve your own additiona
 For people unfamiliar with Apple Mac, some tricks:
 
 * Copy / Past: "cmd+c" / "cmd+v" (not ctrl!)
-* Select all: "cmd+a"
+* Select: Hold clicking with the trackpad and move to select
 
 ## Connect to the lab environment
 **This is where you start!**

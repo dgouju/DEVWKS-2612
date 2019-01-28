@@ -296,29 +296,11 @@ pandas_result
 11. **Run this cell**.
  
  This UserApp can be scheduled as a job for ongoing analysis and result can be processed by a SIEM consuming Kafka messages, ...
- 
-## Conclusion
-During this workshop, you manipulated key concepts of Tetration User Apps:
-
-* Accessing Tetration Datalake, listing available data
-* Processing this data in your own way
-* Sending data out of Tetration using Kafka
-* Combining Tetration and your data for more contextual use cases
-
-Now you have the basic knowledge, imagine what you can do with some Python skills!
-
-Pro-tip: this code allows you to list all the available python libraries
-
-```python
-for dist in __import__('pkg_resources').working_set:
-    print(dist)
-``` 
 
 ## Lab Cleanup
 1. Exit your current UserApp by clicking on Data Platform --> User Apps in the left panel.
 2. Stop your previous App "Combine data" (and all running apps if so).
-3. Delete your 4 UserApps: Datalake queries, Portscan detector, Kafka contest, Combine data.
-4. On the opened terminal on your Mac laptop, run the following command:  
+3. On the opened terminal on your Mac laptop, run the following command:  
 
  ```bash
 cd Documents/DEVWKS-2612
@@ -338,3 +320,20 @@ Clean up the workstation environment after the lab.
  Cleanup completed.
  </pre>
  </details>
+
+## Conclusion
+During this workshop, you manipulated key concepts of Tetration User Apps:
+
+* Accessing Tetration Datalake, listing available data
+* Processing this data in your own way
+* Sending data out of Tetration using Kafka
+* Combining Tetration and your data for more contextual use cases
+
+Now you have the basic knowledge, imagine what you can do with some Python skills!
+
+Pro-tip: this code allows you to list all the available python libraries
+
+```python
+for dist in __import__('pkg_resources').working_set:
+    print(dist)
+``` 

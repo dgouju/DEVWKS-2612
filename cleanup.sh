@@ -32,6 +32,7 @@ echo " "
 echo "Cleaning files"
 cd ${HOME}/Documents
 rm -rf DEVWKS-2612
+rm ${HOME}/Desktop/Tetration\ lab\ urls.txt
 echo " "
 
 echo "Cleanup completed."

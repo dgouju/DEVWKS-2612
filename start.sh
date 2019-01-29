@@ -56,4 +56,13 @@ echo " "
 
 echo "Opening Incognito browser window for lab"
 open -a /Applications/Google\ Chrome.app --args --ignore-certificate-errors --incognito file://${ROOTDIR}/pod.html https://198.19.193.228/h4_users/sign_in?h4_user[email]=${USERNAME} https://github.com/dgouju/DEVWKS-2612/blob/master/README.md
+echo "Credentials:" > ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo "file://${ROOTDIR}/pod.html" >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo "Tetration cluster:" >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo "https://198.19.193.228/h4_users/sign_in?h4_user[email]=${USERNAME}" >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo "Lab guide:" >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo "https://github.com/dgouju/DEVWKS-2612/blob/master/README.md" >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo >> ${HOME}/Desktop/Tetration\ lab\ urls.txt
 echo " "

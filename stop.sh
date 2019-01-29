@@ -29,5 +29,9 @@ echo "Stopping AnyConnect"
 ${ANYCONNECTROOT}/vpn disconnect 1>/dev/null
 echo " "
 
+echo "Cleaning url file"
+rm ${HOME}/Desktop/Tetration\ lab\ urls.txt
+echo " "
+
 echo "Stopped."
 echo " "

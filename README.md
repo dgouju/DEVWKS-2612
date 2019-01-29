@@ -5,7 +5,7 @@ Tetration allows you to use its open Big Data engine to solve your own additiona
 ## Mac cheatsheet
 For people unfamiliar with Apple Mac, some tricks:
 
-* Copy / Past: "cmd+c" / "cmd+v" (not ctrl!)
+* Copy / Past: "command+c" / "command+v" (not control!)
 * Select: Hold clicking with the trackpad and move to select
 
 ## Connect to the lab environment
@@ -294,6 +294,33 @@ pandas_result
 ```
 
 11. **Run this cell**.
+12. As we know how to send a message to Kafka, let's format this output and build a JSON object with some metadata around. **Add a new cell** and past this code:
+
+ ```python
+# Create JSON dictionnary
+json_object = {}
+# Add key / values pairs
+json_object['message_type'] = "alert"
+json_object['message_desc'] = "suspicious_items"
+json_object['message_timestamp'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')+" UTC"
+json_object['suspicious_flows'] = pandas_result.to_json(orient='records')
+# Format it as a string
+message = json.dumps(json_object)
+print(message)
+```
+
+13. **Run this cell**.
+14. Now, send this message to Kafka Alerts topic. **Add a new cell** and put the proper code in it.
+
+ ```python
+status = sc._jvm.com.tetration.apps.DataTaps.sendMessage(message, "Alerts")
+if status == 1:
+	 print("Message sent")
+else:
+	 print("Error!")
+```
+
+15. **Run this cell** and look at your proctor's screen.
  
  This UserApp can be scheduled as a job for ongoing analysis and result can be processed by a SIEM consuming Kafka messages, ...
 
